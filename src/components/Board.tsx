@@ -12,8 +12,10 @@ interface BoardProps {
   highlightBad?: { row: number; col: number } | null;
   highlightGood?: { row: number; col: number } | null;
   lastMove?: { row: number; col: number } | null;
+  aiConsideringMove?: { row: number; col: number } | null;
   isReversed?: boolean;
   isPassing?: boolean;
+  isOpponentTurn?: boolean;
 }
 
 export const Board: React.FC<BoardProps> = ({
@@ -26,8 +28,10 @@ export const Board: React.FC<BoardProps> = ({
   highlightBad,
   highlightGood,
   lastMove,
+  aiConsideringMove,
   isReversed = false,
   isPassing = false,
+  isOpponentTurn = false,
 }) => {
   // 直近に追加された石を追跡（アニメーション用）
   const prevBoardRef = useRef<BoardState>(board);
@@ -103,6 +107,7 @@ export const Board: React.FC<BoardProps> = ({
             const isLastMove = lastMove?.row === r && lastMove?.col === c;
             const isBad = highlightBad?.row === r && highlightBad?.col === c;
             const isGood = highlightGood?.row === r && highlightGood?.col === c;
+            const isAiConsidering = aiConsideringMove?.row === r && aiConsideringMove?.col === c;
             const isWin = isWinnerStone(r, c);
             const isDark = (ri + ci) % 2 === 1;
 
@@ -133,7 +138,10 @@ export const Board: React.FC<BoardProps> = ({
                 {isLastMove && <div className="stone-last-glow" />}
 
                 {/* 合法手インジケーター */}
-                {!cell && isLegal && <div className="legal-move-dot" />}
+                {!cell && isLegal && <div className={`legal-move-dot ${isOpponentTurn ? 'opponent' : ''}`} />}
+
+                {/* AI推論中ハイライト */}
+                {isAiConsidering && <div className="ai-considering-indicator" />}
 
                 {/* フィードバックハイライト */}
                 {isBad && cell && <div className="highlight-bad" />}

@@ -362,8 +362,8 @@ function getPerfectSearchThreshold(difficulty: Difficulty): number {
 export function findBestMove(
   board: BoardState,
   aiPlayer: Player,
-  difficulty: Difficulty,
-  onProgress?: (progress: number) => void
+  difficulty: Difficulty = 'medium',
+  onProgress?: (progress: number, currentMove?: [number, number]) => void
 ): [number, number] {
   initZobrist();
   if (transpositionTable.size > TT_MAX_SIZE) {
@@ -381,7 +381,11 @@ export function findBestMove(
   if (difficulty === 'easy') {
     let best: [number, number] = moves[0];
     let bestCount = -1;
-    for (const [r, c] of moves) {
+    for (let i = 0; i < moves.length; i++) {
+      const [r, c] = moves[i];
+      if (onProgress) {
+        onProgress(Math.floor(((i + 1) / moves.length) * 100), [r, c]);
+      }
       const [, flipped] = applyMove(board, r, c, aiPlayer);
       if (flipped.length > bestCount) {
         bestCount = flipped.length;
@@ -412,7 +416,7 @@ export function findBestMove(
     scoredMoves.push({ r, c, score });
     
     if (onProgress) {
-      onProgress(Math.floor(((i + 1) / totalMoves) * 100));
+      onProgress(Math.floor(((i + 1) / totalMoves) * 100), [r, c]);
     }
   }
 

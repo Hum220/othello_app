@@ -37,6 +37,7 @@ function App() {
   const [winner, setWinner] = useState<Player | null | 'draw'>(null);
   const [isThinking, setIsThinking] = useState(false);
   const [aiProgress, setAiProgress] = useState(0); // AI思考ゲージ
+  const [aiConsideringMove, setAiConsideringMove] = useState<{ row: number; col: number } | null>(null); // AI推論中の手
   const [isPassing, setIsPassing] = useState(false); // パスオーバーレイ
 
   // ─── 設定 ───
@@ -95,6 +96,7 @@ function App() {
     setWinner(null);
     setIsThinking(false);
     setAiProgress(0);
+    setAiConsideringMove(null);
     setIsPassing(false);
     setHistory([]);
     setTurnRecords([]);
@@ -313,6 +315,7 @@ function App() {
         executeMoveRef.current(move[0], move[1], aiPlayer);
         setIsThinking(false);
         setAiProgress(0);
+        setAiConsideringMove(null);
       }, delay);
     };
 
@@ -321,13 +324,19 @@ function App() {
         aiWorkerRef.current.onmessage = (e) => {
           if (e.data.type === 'progress') {
             setAiProgress(e.data.progress);
+            if (e.data.currentMove) {
+              setAiConsideringMove({ row: e.data.currentMove[0], col: e.data.currentMove[1] });
+            }
           } else if (e.data.type === 'result') {
             handleAiResult(e.data.move);
           }
         };
         aiWorkerRef.current.postMessage({ board, aiPlayer, difficulty });
       } else {
-        const best = findBestMove(board, aiPlayer, difficulty, (p) => setAiProgress(p));
+        const best = findBestMove(board, aiPlayer, difficulty, (p, cm) => {
+          setAiProgress(p);
+          if (cm) setAiConsideringMove({ row: cm[0], col: cm[1] });
+        });
         handleAiResult(best);
       }
     }, 50);
@@ -565,11 +574,13 @@ function App() {
           onCellClick={handleCellClick}
           currentPlayer={currentPlayer}
           isGameOver={isGameOver}
-          showLegalMoves={showLegalMoves && !viewingFeedback && currentPlayer === humanPlayer}
+          showLegalMoves={showLegalMoves && !viewingFeedback}
+          isOpponentTurn={currentPlayer !== humanPlayer}
           winningPlayer={winner === 'draw' ? null : winner}
           highlightBad={highlightBad}
           highlightGood={activeHighlightGood}
           lastMove={viewingFeedback ? null : lastMove}
+          aiConsideringMove={aiConsideringMove}
           isReversed={isOnline && humanPlayer === 'white'}
           isPassing={isPassing}
         />
@@ -636,6 +647,7 @@ function App() {
           setWinner(null);
           setIsThinking(false);
           setAiProgress(0);
+          setAiConsideringMove(null);
           setIsPassing(false);
           setHistory([]);
           setTurnRecords([]);

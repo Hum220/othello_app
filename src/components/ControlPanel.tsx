@@ -291,21 +291,27 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           <RotateCcw size={16} />
           最初からやり直す
         </button>
-      </div>
-
-      {isThinking && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--accent)', fontWeight: 600, fontSize: '0.9rem' }}>
-          <div>
-            <span className="spin" style={{ display: 'inline-block', marginRight: '0.4rem' }}>⟳</span>
-            AIが思考中...
-          </div>
-          {aiProgress !== undefined && (
-            <div style={{ width: '100%', height: '6px', background: 'var(--glass-bg)', borderRadius: '3px', overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${aiProgress}%`, background: 'var(--accent)', transition: 'width 0.2s ease-out' }} />
+        {isThinking && (
+          <div className="ai-thinking-container" style={{ margin: '1rem 0 0 0', width: '100%' }}>
+            <div className="ai-thinking-text">
+              <span className="spin" style={{ display: 'inline-block' }}>⚙️</span>
+              AI思考中...
             </div>
-          )}
-        </div>
-      )}
+            {aiProgress !== undefined && (
+              <div className="ai-thinking-gauge">
+                <div 
+                  className="ai-thinking-gauge-fill"
+                  style={{ 
+                    width: `${Math.max(2, aiProgress)}%`,
+                    animation: 'none',
+                    transition: 'width 0.2s ease-out'
+                  }}
+                ></div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

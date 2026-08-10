@@ -413,6 +413,17 @@ button.radio-btn:focus-visible {
   animation: none;
 }
 
+/* 相手（AI）の合法手インジケーター */
+.legal-move-dot.opponent {
+  background: rgba(59, 130, 246, 0.5);
+  border: 2px solid rgba(59, 130, 246, 0.7);
+}
+
+.cell:hover .legal-move-dot.opponent {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
 /* ===================================================
    フィードバックハイライト
    =================================================== */
@@ -868,4 +879,72 @@ button.radio-btn:focus-visible {
   border-radius: 999px;
   text-align: center;
   animation: slideUp 0.3s ease;
+}
+
+/* =====================================================
+   AI Thinking Gauge
+   ===================================================== */
+.ai-thinking-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 250px;
+  animation: fadeIn 0.2s ease;
+}
+
+.ai-thinking-text {
+  font-size: 0.9rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ai-thinking-gauge {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ai-thinking-gauge-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  box-shadow: 0 0 8px var(--accent);
+  transition: width 0.1s linear;
+}
+
+/* AI 推論中盤面ハイライト */
+.ai-considering-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(168, 85, 247, 0.5); /* 紫色ベース */
+  border: 2px solid rgba(168, 85, 247, 0.9);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.8);
+  z-index: 6;
+  pointer-events: none;
+  animation: consideringPulse 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes consideringPulse {
+  0%   { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
 }
