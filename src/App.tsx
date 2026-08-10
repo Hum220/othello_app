@@ -568,34 +568,38 @@ function App() {
           </div>
         </div>
 
-        {/* AI思考ゲージ (レイアウトシフトを防ぐため常にDOMに置き、opacity/visibilityで切り替え) */}
-        <div 
-          className="ai-thinking-container" 
-          style={{ 
-            margin: '0 0 1rem 0', 
-            width: '100%', 
-            maxWidth: '400px',
-            opacity: isThinking ? 1 : 0,
-            visibility: isThinking ? 'visible' : 'hidden',
-            transition: 'opacity 0.2s ease, visibility 0.2s ease'
-          }}
-        >
-          <div className="ai-thinking-text">
-            <span className="spin" style={{ display: 'inline-block' }}>⚙️</span>
-            AI思考中...
-          </div>
-          {aiProgress !== undefined && (
-            <div className="ai-thinking-gauge">
-              <div 
-                className="ai-thinking-gauge-fill"
-                style={{ 
-                  width: `${Math.max(2, aiProgress)}%`,
-                  animation: 'none',
-                  transition: 'width 0.2s ease-out'
-                }}
-              ></div>
+        {/* AI思考ゲージ (完全固定高さのラッパーで囲んでレイアウトシフトを防止) */}
+        <div style={{ height: '76px', width: '100%', maxWidth: '400px', margin: '0 0 1rem 0', position: 'relative' }}>
+          <div 
+            className="ai-thinking-container" 
+            style={{ 
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%', 
+              margin: 0,
+              opacity: isThinking ? 1 : 0,
+              pointerEvents: isThinking ? 'auto' : 'none',
+              transition: 'opacity 0.2s ease'
+            }}
+          >
+            <div className="ai-thinking-text">
+              <span className="spin" style={{ display: 'inline-block' }}>⚙️</span>
+              AI思考中...
             </div>
-          )}
+            {aiProgress !== undefined && (
+              <div className="ai-thinking-gauge">
+                <div 
+                  className="ai-thinking-gauge-fill"
+                  style={{ 
+                    width: `${Math.max(2, aiProgress)}%`,
+                    animation: 'none',
+                    transition: 'width 0.2s ease-out'
+                  }}
+                ></div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 盤面 */}
