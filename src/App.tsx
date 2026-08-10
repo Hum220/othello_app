@@ -643,7 +643,6 @@ function App() {
         onUndo={undoMove}
         canUndo={history.length > 0 && !isOnline}
         isThinking={isThinking}
-        aiProgress={aiProgress}
         soundEnabled={soundEnabled}
         setSoundEnabled={setSoundEnabled}
         onHint={handleShowHint}

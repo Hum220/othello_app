@@ -17,7 +17,6 @@ interface ControlPanelProps {
   onUndo: () => void;
   canUndo: boolean;
   isThinking: boolean;
-  aiProgress?: number;
   soundEnabled: boolean;
   setSoundEnabled: (s: boolean) => void;
   onHint: () => void;
@@ -64,7 +63,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   onUndo,
   canUndo,
   isThinking,
-  aiProgress,
   soundEnabled,
   setSoundEnabled,
   onHint,
@@ -286,6 +284,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         >
           <Undo2 size={16} />
           待った（１手戻る）
+        </button>
         <button className="btn-primary" onClick={onReset}>
           <RotateCcw size={16} />
           最初からやり直す
