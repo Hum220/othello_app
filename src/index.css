@@ -1,0 +1,871 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ===================================================
+   CSS カスタムプロパティ（デザイントークン）
+   =================================================== */
+:root {
+  --bg-color: #0a0f0d;
+  --bg-gradient: radial-gradient(ellipse at 50% 0%, #0d1f17 0%, #0a0f0d 70%);
+  --panel-bg: rgba(16, 30, 22, 0.75);
+  --board-bg: #1a5c32;
+  --board-bg-dark: #154d29;
+  --board-line: rgba(0, 0, 0, 0.4);
+  --board-border: #0d3a1e;
+  --text-main: #e8f5ee;
+  --text-muted: #7aab8e;
+  --accent: #22c55e;
+  --accent-hover: #16a34a;
+  --accent-glow: rgba(34, 197, 94, 0.35);
+  --danger: #f43f5e;
+  --success: #22c55e;
+  --warning: #f59e0b;
+
+  --stone-black: #111111;
+  --stone-white: #f0f0f0;
+  --stone-shadow: rgba(0, 0, 0, 0.5);
+
+  --glass-bg: rgba(16, 30, 22, 0.72);
+  --glass-border: rgba(34, 197, 94, 0.15);
+  --glass-blur: 16px;
+}
+
+/* ===================================================
+   リセット & ベーススタイル
+   =================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-color);
+  background-image: var(--bg-gradient);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+/* ===================================================
+   グラスモーフィズム
+   =================================================== */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ===================================================
+   レイアウト
+   =================================================== */
+.app-container {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+@media (max-width: 860px) {
+  .app-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+  .control-panel {
+    width: 100%;
+    max-width: 520px;
+    order: 2;
+  }
+}
+
+/* ===================================================
+   タイポグラフィ
+   =================================================== */
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 40%, #86efac 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  letter-spacing: -0.5px;
+  filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.3));
+}
+
+h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+}
+
+h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+p {
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+/* ===================================================
+   ボタン
+   =================================================== */
+button {
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.3);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.45);
+}
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--glass-border);
+}
+
+/* ===================================================
+   コントロールパネル
+   =================================================== */
+.control-panel {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  min-width: 300px;
+  max-width: 340px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-group label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.radio-group {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  padding: 0.25rem;
+  display: flex;
+  gap: 0.2rem;
+}
+
+button.radio-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.45rem 0.5rem;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+button.radio-btn.active {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.4);
+}
+
+button.radio-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ===================================================
+   盤面コンテナ
+   =================================================== */
+.board-container {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ===================================================
+   オセロ盤グリッド
+   =================================================== */
+.board-grid {
+  background: var(--board-bg);
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 3px solid var(--board-border);
+  box-shadow:
+    0 12px 50px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: min(620px, calc(100vw - 2rem));
+  aspect-ratio: 1;
+  gap: 2px;
+  position: relative;
+}
+
+/* ===================================================
+   セル
+   =================================================== */
+.cell {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  background: var(--board-bg);
+  border-radius: 3px;
+  transition: background 0.15s;
+}
+
+.cell:hover {
+  background: #1e6b3a;
+}
+
+.cell.cell-dark {
+  background: var(--board-bg-dark);
+}
+
+.cell.cell-dark:hover {
+  background: #1c6035;
+}
+
+/* ===================================================
+   石（3Dフリップアニメーション対応）
+   =================================================== */
+.stone-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 82%;
+  height: 82%;
+  transform: translate(-50%, -50%);
+  perspective: 200px;
+  z-index: 10;
+}
+
+.stone {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+  box-shadow:
+    2px 3px 8px var(--stone-shadow),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stone.black {
+  background: radial-gradient(circle at 35% 30%, #4a4a4a, #0a0a0a 70%);
+}
+
+.stone.white {
+  background: radial-gradient(circle at 35% 30%, #ffffff, #cccccc 70%);
+}
+
+/* 石が置かれた時のポップインアニメーション */
+.stone.pop-in {
+  animation: popIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+  0%   { transform: translate(-50%, -50%) scale(0) rotateY(0deg); opacity: 0; }
+  60%  { transform: translate(-50%, -50%) scale(1.1) rotateY(0deg); }
+  100% { transform: translate(-50%, -50%) scale(1) rotateY(0deg); opacity: 1; }
+}
+
+/* 裏返しアニメーション（旧色から新色へのY軸回転） */
+.stone-flip-enter {
+  animation: flipEnter 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes flipEnter {
+  0%   { transform: rotateY(-90deg); }
+  100% { transform: rotateY(0deg); }
+}
+
+/* 勝利石の点滅 */
+.stone.highlight-win {
+  animation: winPulse 0.6s ease-in-out infinite alternate !important;
+  z-index: 15;
+}
+
+@keyframes winPulse {
+  0% {
+    box-shadow: 2px 3px 8px var(--stone-shadow), 0 0 0px rgba(34, 197, 94, 0);
+  }
+  100% {
+    box-shadow: 2px 3px 8px var(--stone-shadow),
+      0 0 20px 8px rgba(34, 197, 94, 0.9),
+      0 0 40px 15px rgba(34, 197, 94, 0.4);
+  }
+}
+
+/* 最後の着手グロー */
+.stone-last-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 82%;
+  height: 82%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+  pointer-events: none;
+  animation: lastGlow 1.6s ease-in-out 2;
+}
+
+@keyframes lastGlow {
+  0%   { box-shadow: 0 0 0px rgba(251, 191, 36, 0); }
+  50%  { box-shadow: 0 0 18px 7px rgba(251, 191, 36, 0.85); }
+  100% { box-shadow: 0 0 0px rgba(251, 191, 36, 0); }
+}
+
+/* ===================================================
+   合法手インジケーター
+   =================================================== */
+.legal-move-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(34, 197, 94, 0.5);
+  border: 2px solid rgba(34, 197, 94, 0.7);
+  z-index: 5;
+  pointer-events: none;
+  animation: dotPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.9); }
+  50%       { opacity: 1;   transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* ホバー時に合法手インジケーターを拡大 */
+.cell:hover .legal-move-dot {
+  width: 60%;
+  height: 60%;
+  background: rgba(34, 197, 94, 0.3);
+  border-color: rgba(34, 197, 94, 0.6);
+  animation: none;
+}
+
+/* ===================================================
+   フィードバックハイライト
+   =================================================== */
+.highlight-bad {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--danger), inset 0 0 6px rgba(244, 63, 94, 0.3);
+  z-index: 12;
+  pointer-events: none;
+}
+
+.highlight-good {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--success), inset 0 0 6px rgba(34, 197, 94, 0.3);
+  z-index: 12;
+  pointer-events: none;
+}
+
+/* ===================================================
+   スコアバー
+   =================================================== */
+.score-bar-container {
+  width: 100%;
+  max-width: min(620px, calc(100vw - 2rem));
+  margin: 0 0 1.25rem 0;
+}
+
+.score-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.score-bar-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.score-bar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  background: var(--accent);
+  transition: width 0.4s ease, transform 0.4s ease;
+  border-radius: 4px;
+}
+
+.score-bar-center {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateX(-50%);
+}
+
+/* ===================================================
+   ステータス表示
+   =================================================== */
+.status-banner {
+  margin-bottom: 1rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+}
+
+.status-banner.black-turn {
+  background: rgba(0, 0, 0, 0.55);
+  border: 2px solid rgba(100, 100, 100, 0.5);
+}
+
+.status-banner.white-turn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(200, 200, 200, 0.4);
+}
+
+.status-banner.pass-notice {
+  background: rgba(245, 158, 11, 0.15);
+  border: 2px solid var(--warning);
+  color: var(--warning);
+  animation: passFlash 0.4s ease 2;
+}
+
+@keyframes passFlash {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+/* ===================================================
+   石数スコアカード
+   =================================================== */
+.stone-count-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.stone-count-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s;
+}
+
+.stone-count-card.leading {
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.3);
+  border-color: var(--accent);
+}
+
+.stone-count-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.stone-count-icon.black {
+  background: radial-gradient(circle at 35% 30%, #555, #111);
+}
+
+.stone-count-icon.white {
+  background: radial-gradient(circle at 35% 30%, #fff, #ccc);
+}
+
+/* ===================================================
+   モーダル
+   =================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-content {
+  background: #0d1f17;
+  padding: 2rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 18px;
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: slideUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ===================================================
+   フィードバックリスト
+   =================================================== */
+.feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.feedback-item {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 1rem;
+  border-radius: 10px;
+  border-left: 4px solid var(--accent);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.feedback-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.feedback-item.bad {
+  border-left-color: var(--danger);
+}
+
+/* ===================================================
+   ゲーム結果バナー
+   =================================================== */
+.game-status {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 1rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  margin-bottom: 1rem;
+}
+
+.status-win  { color: var(--success); }
+.status-lose { color: var(--danger); }
+.status-draw { color: var(--text-muted); }
+
+/* ===================================================
+   トースト通知
+   =================================================== */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 15, 13, 0.97);
+  border: 1px solid var(--glass-border);
+  padding: 0.75rem 1.75rem;
+  border-radius: 999px;
+  color: var(--text-main);
+  z-index: 300;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: toastIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(14px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+/* ===================================================
+   スピナー
+   =================================================== */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ===================================================
+   振り返りバナー
+   =================================================== */
+.review-banner {
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* ===================================================
+   盤面直上石数スコアボード
+   =================================================== */
+.board-scoreboard {
+  width: min(620px, calc(100vw - 2rem));
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.board-score-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.board-score-card--leading {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.4);
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+}
+
+.board-score-card--trailing {
+  background: rgba(0, 0, 0, 0.25);
+  opacity: 0.7;
+}
+
+.board-score-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.board-score-icon--black {
+  background: radial-gradient(circle at 35% 30%, #555, #0a0a0a);
+}
+
+.board-score-icon--white {
+  background: radial-gradient(circle at 35% 30%, #fff, #ccc);
+}
+
+.board-score-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.board-score-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.board-score-count {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-main);
+  font-variant-numeric: tabular-nums;
+  transition: all 0.3s ease;
+}
+
+.board-score-card--leading .board-score-count {
+  color: var(--accent);
+}
+
+.board-score-badge {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(34, 197, 94, 0.15);
+  padding: 1px 6px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.board-score-turn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  min-width: 64px;
+}
+
+.turn-indicator {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  animation: turnBounce 0.8s ease-in-out infinite alternate;
+}
+
+.turn-indicator--black {
+  background: radial-gradient(circle at 35% 30%, #555, #0a0a0a);
+}
+
+.turn-indicator--white {
+  background: radial-gradient(circle at 35% 30%, #fff, #ccc);
+}
+
+@keyframes turnBounce {
+  0%   { transform: scale(0.9); box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+  100% { transform: scale(1.1); box-shadow: 0 4px 16px rgba(34, 197, 94, 0.4); }
+}
+
+/* ===================================================
+   スクロールバー（WebKit）
+   =================================================== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 197, 94, 0.5);
+}
+
+/* ===================================================
+   @keyframes blink（オンライン番インジケーター）
+   =================================================== */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ===================================================
+   パス通知オーバーレイ
+   =================================================== */
+.pass-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease;
+}
+
+.pass-overlay-text {
+  background: rgba(245, 158, 11, 0.2);
+  border: 2px solid var(--warning);
+  color: var(--warning);
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  text-align: center;
+  animation: slideUp 0.3s ease;
+}
