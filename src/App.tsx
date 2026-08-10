@@ -568,6 +568,28 @@ function App() {
           </div>
         </div>
 
+        {/* AI思考ゲージ */}
+        {isThinking && (
+          <div className="ai-thinking-container" style={{ margin: '0 0 1rem 0', width: '100%', maxWidth: '400px' }}>
+            <div className="ai-thinking-text">
+              <span className="spin" style={{ display: 'inline-block' }}>⚙️</span>
+              AI思考中...
+            </div>
+            {aiProgress !== undefined && (
+              <div className="ai-thinking-gauge">
+                <div 
+                  className="ai-thinking-gauge-fill"
+                  style={{ 
+                    width: `${Math.max(2, aiProgress)}%`,
+                    animation: 'none',
+                    transition: 'width 0.2s ease-out'
+                  }}
+                ></div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* 盤面 */}
         <Board
           board={displayBoard}

@@ -286,31 +286,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         >
           <Undo2 size={16} />
           待った（１手戻る）
-        </button>
         <button className="btn-primary" onClick={onReset}>
           <RotateCcw size={16} />
           最初からやり直す
         </button>
-        {isThinking && (
-          <div className="ai-thinking-container" style={{ margin: '1rem 0 0 0', width: '100%' }}>
-            <div className="ai-thinking-text">
-              <span className="spin" style={{ display: 'inline-block' }}>⚙️</span>
-              AI思考中...
-            </div>
-            {aiProgress !== undefined && (
-              <div className="ai-thinking-gauge">
-                <div 
-                  className="ai-thinking-gauge-fill"
-                  style={{ 
-                    width: `${Math.max(2, aiProgress)}%`,
-                    animation: 'none',
-                    transition: 'width 0.2s ease-out'
-                  }}
-                ></div>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
