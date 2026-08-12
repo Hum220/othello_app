@@ -3,6 +3,7 @@ import { Board } from './components/Board';
 import { ControlPanel } from './components/ControlPanel';
 import { FeedbackModal } from './components/FeedbackModal';
 import { OnlineLobby } from './components/OnlineLobby';
+import { StrategyGuide } from './components/StrategyGuide';
 import type { BoardState, Player, Move } from './game/logic';
 import {
   createInitialBoard,
@@ -72,6 +73,9 @@ function App() {
   const [currentScore, setCurrentScore] = useState(0);
   const [lastMove, setLastMove] = useState<{ row: number; col: number } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+
+  // ─── 画面切り替え ───
+  const [currentView, setCurrentView] = useState<'game' | 'strategy'>('game');
 
   const aiPlayer = humanPlayer === 'black' ? 'white' : 'black';
   const isVsAI = gameMode === 'vs-ai';
@@ -457,9 +461,18 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* ─── メイン（盤面エリア） ─── */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <h1>⚫ オセロ ⚪</h1>
+      {currentView === 'strategy' ? (
+        <StrategyGuide onBack={() => setCurrentView('game')} />
+      ) : (
+        <>
+          {/* ─── メイン（盤面エリア） ─── */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div className="header-container">
+              <h1>⚫ オセロ ⚪</h1>
+              <button className="btn-strategy" onClick={() => setCurrentView('strategy')}>
+                📖 必勝法を読む
+              </button>
+            </div>
 
         {/* 形勢ゲージ */}
         {(isVsAI || isOnline) && (
@@ -731,6 +744,8 @@ function App() {
         <div className="toast" role="status" aria-live="polite">
           {toast}
         </div>
+      )}
+        </>
       )}
     </div>
   );
